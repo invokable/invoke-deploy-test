@@ -26,4 +26,3 @@ case "$CONTAINER_ROLE" in
     exit 1
     ;;
 esac
-
