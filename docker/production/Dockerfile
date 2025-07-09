@@ -13,7 +13,11 @@ RUN apk add --no-cache \
     icu-dev \
     autoconf \
     oniguruma-dev \
-    supervisor
+    supervisor \
+    gcc \
+    g++ \
+    make \
+    linux-headers
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -56,4 +60,3 @@ RUN chown -R www:www /var/www/html
 USER www
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
