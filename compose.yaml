@@ -6,12 +6,17 @@ services:
     restart: unless-stopped
     environment:
       - CONTAINER_ROLE=app
+      - VIRTUAL_HOST=example.com
+      - VIRTUAL_PORT=8000
+    expose:
+      - "8000"
     volumes:
       - .:/var/www/html
       - ./storage:/var/www/html/storage
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
     networks:
       - app-network
+      - nginx-proxy
     depends_on:
       - redis
 
@@ -67,6 +72,8 @@ services:
 networks:
   app-network:
     driver: bridge
+  nginx-proxy:
+    external: true
 
 volumes:
   redis-data:
