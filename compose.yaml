@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     environment:
       - CONTAINER_ROLE=app
-      - VIRTUAL_HOST=example.com
+      - VIRTUAL_HOST=dind.test
       - VIRTUAL_PORT=8080
     expose:
       - "8080"
