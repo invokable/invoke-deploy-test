@@ -22,9 +22,6 @@ services:
     environment:
       - CONTAINER_ROLE=app
       - VIRTUAL_HOST=dind.test
-      - VIRTUAL_PORT=8080
-    ports:
-      - "8080:80"
     volumes:
       - .:/var/www/html
       - ./storage:/var/www/html/storage
