@@ -7,10 +7,10 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
-      - ./nginx/vhost:/etc/nginx/vhost.d
-      - ./nginx/html:/usr/share/nginx/html
-      - ./nginx/dhparam:/etc/nginx/dhparam
+      - ./docker/nginx/certs:/etc/nginx/certs:ro
+      - ./docker/nginx/vhost:/etc/nginx/vhost.d
+      - ./docker/nginx/html:/usr/share/nginx/html
+      - ./docker/nginx/dhparam:/etc/nginx/dhparam
     networks:
       - nginx-proxy
 
@@ -22,6 +22,9 @@ services:
     environment:
       - CONTAINER_ROLE=app
       - VIRTUAL_HOST=dind.test
+      - VIRTUAL_PORT=8080
+    ports:
+      - "8080:80"
     volumes:
       - .:/var/www/html
       - ./storage:/var/www/html/storage
