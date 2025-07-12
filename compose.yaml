@@ -4,7 +4,7 @@ services:
     container_name: nginx-proxy
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./nginx/certs:/etc/nginx/certs:ro
@@ -22,7 +22,6 @@ services:
     environment:
       - CONTAINER_ROLE=app
       - VIRTUAL_HOST=dind.test
-      - VIRTUAL_PORT=8080
     volumes:
       - .:/var/www/html
       - ./storage:/var/www/html/storage
