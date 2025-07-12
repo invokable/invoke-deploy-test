@@ -11,10 +11,6 @@ echo "Redis is ready!"
 case "$CONTAINER_ROLE" in
   app)
     echo "Starting PHP-FPM..."
-    # Laravel setup
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
     exec php-fpm
     ;;
   queue)
