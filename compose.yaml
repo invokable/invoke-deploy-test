@@ -9,8 +9,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./docker/nginx/certs:/etc/nginx/certs:ro
       - ./docker/nginx/vhost:/etc/nginx/vhost.d
-      - ./docker/nginx/html:/usr/share/nginx/html
-      - ./docker/nginx/dhparam:/etc/nginx/dhparam
     networks:
       - nginx-proxy
 
