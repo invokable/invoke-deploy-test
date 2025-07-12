@@ -17,7 +17,8 @@ RUN apk add --no-cache \
     gcc \
     g++ \
     make \
-    linux-headers
+    linux-headers \
+    netcat-openbsd
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
