@@ -57,6 +57,7 @@ RUN addgroup -g 1000 -S www && \
 
 # Change ownership
 RUN chown -R www:www /var/www/html
+RUN git config --global --add safe.directory /var/www/html
 
 USER www
 
