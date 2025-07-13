@@ -51,9 +51,14 @@ WORKDIR /var/www/html
 COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Create non-root user and add to additional groups for broader compatibility
-RUN addgroup -g 1000 -S www && \
-    adduser -u 1000 -S www -G www,root
+# Create non-root user with matching UID for GitHub Actions compatibility
+# Default to 1000 but allow override for CI environments
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN addgroup -g ${GROUP_ID} -S www && \
+    adduser -u ${USER_ID} -S www -G www && \
+    addgroup -g 118 -S hostgroup 2>/dev/null || true && \
+    adduser www hostgroup 2>/dev/null || true
 
 # Ensure /var/www/html directory structure is set up correctly
 RUN mkdir -p /var/www/html/vendor && \

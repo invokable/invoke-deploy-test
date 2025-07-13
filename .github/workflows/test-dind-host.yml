@@ -30,6 +30,11 @@ jobs:
       run: |
         echo "Starting services..."
         
+        # Set user ID for container to match host for proper permissions
+        export USER_ID=$(id -u)
+        export GROUP_ID=$(id -g)
+        echo "Using USER_ID=$USER_ID, GROUP_ID=$GROUP_ID"
+        
         # Try to start services, but continue even if some fail to build
         if ! docker compose up -d --remove-orphans; then
           echo "Some services may have failed to start. Checking what's running..."
