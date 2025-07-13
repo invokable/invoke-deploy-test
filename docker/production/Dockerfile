@@ -51,12 +51,21 @@ WORKDIR /var/www/html
 COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Create non-root user
+# Create non-root user and add to additional groups for broader compatibility
 RUN addgroup -g 1000 -S www && \
-    adduser -u 1000 -S www -G www
+    adduser -u 1000 -S www -G www,root
 
-# Change ownership
-RUN chown -R www:www /var/www/html
+# Ensure /var/www/html directory structure is set up correctly
+RUN mkdir -p /var/www/html/vendor && \
+    mkdir -p /var/www/html/storage/framework/{cache,sessions,views} && \
+    mkdir -p /var/www/html/bootstrap/cache
+
+# Set ownership and permissions that work with volume mounting
+RUN chown -R www:www /var/www/html && \
+    chmod -R 755 /var/www/html && \
+    chmod -R 775 /var/www/html/storage && \
+    chmod -R 775 /var/www/html/bootstrap/cache
+
 RUN git config --system --add safe.directory /var/www/html
 
 USER www
