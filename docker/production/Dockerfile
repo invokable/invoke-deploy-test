@@ -58,7 +58,7 @@ RUN addgroup -g 1000 -S www && \
 
 # Change ownership
 RUN chown -R www:www /var/www/laravel
-RUN git config --global --add safe.directory /var/www/laravel
+RUN git config --system --add safe.directory /var/www/laravel
 
 USER www
 
