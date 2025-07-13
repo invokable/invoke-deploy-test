@@ -45,8 +45,7 @@ COPY docker/production/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
 COPY docker/production/php.ini /usr/local/etc/php/php.ini
 
 # Set working directory
-RUN mkdir -p /var/www/laravel
-WORKDIR /var/www/laravel
+WORKDIR /var/www/html
 
 # Copy entrypoint script
 COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -57,8 +56,8 @@ RUN addgroup -g 1000 -S www && \
     adduser -u 1000 -S www -G www
 
 # Change ownership
-RUN chown -R www:www /var/www/laravel
-RUN git config --system --add safe.directory /var/www/laravel
+RUN chown -R www:www /var/www/html
+RUN git config --system --add safe.directory /var/www/html
 
 USER www
 
