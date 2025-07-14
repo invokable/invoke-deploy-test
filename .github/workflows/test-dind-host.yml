@@ -30,6 +30,11 @@ jobs:
       run: |
         echo "Starting services..."
         
+        # Set user ID for container to match host for proper permissions
+        export USER_ID=$(id -u)
+        export GROUP_ID=$(id -g)
+        echo "Using USER_ID=$USER_ID, GROUP_ID=$GROUP_ID"
+        
         # Try to start services, but continue even if some fail to build
         if ! docker compose up -d --remove-orphans; then
           echo "Some services may have failed to start. Checking what's running..."
@@ -83,18 +88,16 @@ jobs:
           exit 0
         fi
         
-        # Fix permissions for vendor directory
-        echo "Setting up permissions for vendor directory..."
-        docker compose exec -T --user root app sh -c "
+        # Create required directories
+        echo "Creating required directories..."
+        docker compose exec -T app sh -c "
           # Create vendor directory with proper permissions
           mkdir -p /var/www/html/vendor
-          chown -R www:www /var/www/html/vendor
           chmod -R 755 /var/www/html/vendor
           
           # Also ensure other required directories exist with proper permissions
           mkdir -p /var/www/html/storage/framework/{cache,sessions,views}
           mkdir -p /var/www/html/bootstrap/cache
-          chown -R www:www /var/www/html/storage /var/www/html/bootstrap/cache
           chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
         "
         
@@ -103,18 +106,8 @@ jobs:
         if docker compose exec -T app composer install --no-dev --optimize-autoloader; then
           echo "✅ Composer install completed successfully"
         else
-          echo "⚠️ Composer install failed, but continuing with test..."
+          echo "⚠️ Composer install failed"
           echo "This may be expected if the app container is not fully ready or has network issues"
-          
-          # Try with root user as fallback
-          echo "Attempting composer install as root user..."
-          if docker compose exec -T --user root app composer install --no-dev --optimize-autoloader; then
-            echo "✅ Composer install completed successfully (as root)"
-            # Fix ownership after install
-            docker compose exec -T --user root app chown -R www:www /var/www/html/vendor
-          else
-            echo "⚠️ Composer install failed even as root, continuing with test..."
-          fi
         fi
         
         # Run additional Laravel setup commands
@@ -122,10 +115,8 @@ jobs:
         
         # Copy .env.example to .env
         echo "Copying .env.example to .env..."
-        if docker compose exec -T --user root app cp .env.example .env 2>/dev/null; then
+        if docker compose exec -T app cp .env.example .env 2>/dev/null; then
           echo "✅ .env file created"
-          # Fix ownership after creating as root
-          docker compose exec -T --user root app chown www:www .env
         else
           echo "⚠️ Could not create .env file"
         fi
