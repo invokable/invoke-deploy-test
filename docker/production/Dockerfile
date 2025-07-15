@@ -60,19 +60,6 @@ RUN addgroup -g ${GROUP_ID} -S www && \
     addgroup -g 118 -S hostgroup 2>/dev/null || true && \
     adduser www hostgroup 2>/dev/null || true
 
-# Ensure /var/www/html directory structure is set up correctly
-RUN mkdir -p /var/www/html/vendor && \
-    mkdir -p /var/www/html/storage/framework/{cache,sessions,views} && \
-    mkdir -p /var/www/html/bootstrap/cache
-
-# Set ownership and permissions that work with volume mounting
-RUN chown -R www:www /var/www/html && \
-    chmod -R 755 /var/www/html && \
-    chmod -R 775 /var/www/html/storage && \
-    chmod -R 775 /var/www/html/bootstrap/cache
-
-RUN git config --system --add safe.directory /var/www/html
-
 USER www
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
