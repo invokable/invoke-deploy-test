@@ -49,7 +49,6 @@ jobs:
         
         # Build the app image with caching
         docker buildx build \
-          --context . \
           --file docker/production/Dockerfile \
           --load \
           --tag invoke-deploy-test-app:latest \
