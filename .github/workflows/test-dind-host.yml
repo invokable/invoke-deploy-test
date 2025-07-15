@@ -88,19 +88,6 @@ jobs:
           exit 0
         fi
         
-        # Create required directories
-        echo "Creating required directories..."
-        docker compose exec -T app sh -c "
-          # Create vendor directory with proper permissions
-          mkdir -p /var/www/html/vendor
-          chmod -R 755 /var/www/html/vendor
-          
-          # Also ensure other required directories exist with proper permissions
-          mkdir -p /var/www/html/storage/framework/{cache,sessions,views}
-          mkdir -p /var/www/html/bootstrap/cache
-          chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-        "
-        
         # Run composer install
         echo "Running composer install..."
         if docker compose exec -T app composer install --no-dev --optimize-autoloader; then
